@@ -31,7 +31,7 @@ const userInfo = () => {
           <Col span={5} className='border'>
             <Space align='center'>
               <span>当前角色类型:</span>
-              <h2>{roleName}</h2>
+              <h2>{roleName}</h2> 
             </Space>
           </Col>
         </Row>
