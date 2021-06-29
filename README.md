@@ -132,7 +132,7 @@ class UserStore{
 export default UserStore
 ```
 
-####实现 Store 间通信  
+#### 实现 store 间通信  
 例子：在一个角色管理的模块，因为自己拥有管理员权限，权力大到甚至能够更改自己的角色类型，那么果真这样操作时，就需要将**RoleStore**的修改同步到**UserStore**，这时就涉及到多个store间通信。  
 思路：创建一个公共的上级 rootStore，实现多个Store间的状态读取，方法调用。
 
@@ -314,7 +314,6 @@ export const useStore = (storeName) => {
 ```
 src/index.jsx
 ```
-// 移除 mobx-react
 - import { Provider } from 'mobx-react'
 
 + import rootStore, {rootStoreContext} from './store'
@@ -410,15 +409,17 @@ export default UserInfo
 [chrome插件](https://chrome.google.com/webstore/detail/mobx-developer-tools/pfgnfdagidkfgccljigdamigbcnndkod)
 ## 三、Q&A
 1. **IE项目能不能用？**
-V4版本默认可用，V5及以上如果需要兼容不支持Proxy的IE / React Native，请在应用初始化修改全局配置useProxies
+V4版本默认可用，V5及以上如果需要兼容不支持Proxy的IE / React Native，请在应用初始化修改全局配置useProxies  
 ```
 import { configure } from "mobx"
 // 如果需要兼容ie或rn，请通过全局配置，禁止使用代理
 configure({ useProxies: "never" })
 ```
+
 2. **为什么MobX新的V6版本，不再推荐类的装饰器语法，而是建议用makeObservable的方式去修饰Store？**  
 不再推荐装饰器的理由：因为装饰器语法尚未定案，纳入 ES 标准的时间遥遥无期，且未来制定的标准可能与当前的装饰器实现方案有所不同。所以出于兼容性，MobX 6中不推荐使用装饰器，并建议使用 makeObservable / makeAutoObservable 代替。但项目中如果使用的是 TS，笔者认为可以基本忽略影响，毕竟装饰器确实使用起来更简洁一些。
-3. **为什么我的组件并没有随着Store数据的更新而更新？**
+
+3. **为什么我的组件并没有随着Store数据的更新而更新？**  
   (1)忘记了observer，useObserver的包裹(大部分原因都是这个)。
   (2)defineProperty的响应式方案会有一些针对[数组和对象的限制](https://cn.mobx.js.org/best/react.html)，需要格外注意，必要时候需要使用mobx提供的set方法来解决。
   (3)只要你始终传递响应式对象的引用，observer就可以很好的工作，如果只是传递属性值，就造成了响应式丢失，常发生在使用ES6解构的场景，或只传个响应式对象的属性进去。如果读者了解vue3，那么其中的[toRefs](https://www.vue3js.cn/docs/zh/api/refs-api.html#torefs)就是为了解决类似的问题，但是Mobx中你可以通过下边的例子避免这种情况。
@@ -433,14 +434,17 @@ configure({ useProxies: "never" })
 
     React.render(<TimerViewer secondPassed={myTimer} />, document.body)
     ```
-  4. **必须要通过action去更新Store？**
+
+  4. **必须要通过action去更新Store？**  
   原理上不必要，原则上必要。你直接**mutable**的方式直接更改Store也是能够触发响应式更新，但是mobx强烈不建议你这样做，因为你会丢失以下好处：
     (1)能够清晰表达表达出一个函数修改状态的意图，有**利于项目维护**
     (2)action结合开发者工具，提供了非常**有用的调试**信息
   当启用**严格模式**时，修改store状态需要强制使用action，参见全局配置enforceActions。MobX并不像redux那样，从原理上就限制了state的更新方式，只能靠这种约定的方式去限制。所以**强烈建议开启此选项**。
-  5. **频繁使用observer，会不会出现性能问题？**
+
+  5. **频繁使用observer，会不会出现性能问题？**  
   当组件相关的 observable 发生变化时，组件将自动重新渲染，反之，它能够确保在没有相关更改时组件不会重新渲染。真正做到了组件的按需渲染，在实践中，这使得 MobX 应用程序开箱即用地进行了很好的优化，它们通常不需要任何额外的代码来防止过度渲染。
-  6. **MobX相比Redux最大的优势是什么？**
+
+  6. **MobX相比Redux最大的优势是什么？**  
   具体来说：MobX的开箱即用，简洁灵活，对现有项目侵入小，这都是相比Redux的优势方面。
   抽象来讲：MobX相比Redux，它天然对实体模型是友好的，巧妙的借助拦截代理在内部把数据做了observable转换，让你在使用层面感知到的还是实体模型，但是它却拥有了响应式能力，这就是mobx最厉害的地方，它适合抽象**领域模型**！
 #END THANKS～
