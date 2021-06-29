@@ -446,10 +446,10 @@ configure({ useProxies: "never" })
 
   6. **MobX相比Redux最大的优势是什么？**  
   具体来说：MobX的开箱即用，简洁灵活，对现有项目侵入小，这都是相比Redux的优势方面。
-  抽象来讲：MobX相比Redux，它天然对实体模型是友好的，它在内部巧妙的借助拦截代理把数据做了observable转换，让你依然在使用层面感知到的是实体模型，但是它却拥有了响应式能力，这就是mobx最厉害的地方，它适合抽象**领域模型**！
+  抽象来讲：MobX相比Redux，它天然对实体模型是友好的，它在内部巧妙的借助拦截代理把数据做了observable转换，让你依然在使用层面感知到的是实体模型，但是它却拥有了响应式能力，这就是mobx最厉害的地方，它适合抽象[**领域模型**](https://zh.mobx.js.org/defining-data-stores.html#%E9%A2%86%E5%9F%9F%E5%AF%B9%E8%B1%A1)！
 ## 结尾
 以上所有例子都可在这个[github仓库](https://github.com/FEyudong/mobx-study.git)找到。 
-#END THANKS～
+# END THANKS～
 
 
 
