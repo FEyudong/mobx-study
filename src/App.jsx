@@ -3,7 +3,9 @@ import "./App.css";
 import { HashRouter as Router, Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import RouterViews from "./router";
-import UserInfoView from "./demos/UserInfo"
+// import UserInfoView from "./demos/UserInfo"
+// import UserInfoView from "./demos/UserInfoByHook"
+import UserInfoView from "./demos/UserInfoScopeStore"
 
 const { Content, Sider,Header } = Layout;
 class App extends React.Component {

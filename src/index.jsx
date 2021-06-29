@@ -3,15 +3,15 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 
-import { Provider } from 'mobx-react'
-import store from './store'
+// import { Provider } from 'mobx-react'
+import rootStore, {rootStoreContext} from './store'
+
+const { Provider } = rootStoreContext
 
 ReactDOM.render(
-  <React.StrictMode>
-      <Provider {...store}>
+      <Provider value={rootStore}>
           <App/>
-      </Provider>
-  </React.StrictMode>,
+      </Provider>,
   document.getElementById("root")
 );
 

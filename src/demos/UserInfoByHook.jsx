@@ -1,11 +1,10 @@
-import { Component } from "react";
-import { inject,observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import { Row, Col, Space } from "antd";
+import { useStore } from '../store';
 
-// class组件
-class UserInfo extends Component {
-  render() {
-    const { roleName } = this.props.userStore;
+// hooks
+const UserInfo = ()=> {
+    const { roleName } = useStore('userStore')
     return (
         <Row justify="space-between">
           <Col></Col>
@@ -16,7 +15,6 @@ class UserInfo extends Component {
             </Space>
           </Col>
         </Row>
-    );
-  }
+    )
 }
-export default inject('userStore')(observer(UserInfo))
+export default observer(UserInfo)
