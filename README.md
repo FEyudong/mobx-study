@@ -84,13 +84,14 @@ class UserStore{
 export default UserStore
 ```
 
-方式三、使用**类 + makeObservable** （V6 版本的推荐方式）（**不再推荐装饰器**的原因可以在Q&A章节找到）  
+方式三、使用**类 + makeObservable/makeAutoObservable** （V6 版本的推荐方式）（至于**不再推荐装饰器**的原因，你可以在Q&A章节找到）  
 
 ```
 import { makeObservable,observable,computed,action } from 'mobx'
 
 class UserStore{
   constructor(){
+    // 显示的声明类上各属性或方法的需要应用何种能力
     makeObservable(this,{
       roleType:observable,
       roleName:computed,
@@ -114,18 +115,18 @@ import { makeAutoObservable } from 'mobx'
 class UserStore{
   constructor(){
     makeAutoObservable(this)
-    /* 无需显示的声明，会自动应用合适的MobX-Api去修饰。比如
-    （1）值字段会被推断为observable、
+    /* 无需显示的声明，属性及方法会自动应用合适的MobX-Api去修饰。默认情况下：
+    （1）普通属性会被推断为observable、
     （2）get 修饰的方法，会推断为computed、
     （3）普通方法，会自动应用action 
-    （4）如果你有自定义调整某些字段的需求，请参考此方法的[其他入参](https://zh.mobx.js.org/observable-state.html#makeautoobservable)
+     如果你有自定义调整某些字段对应功能的需求，请参考此方法的[其他入参](https://zh.mobx.js.org/observable-state.html#makeautoobservable)
     */
   }
-  roleType = 1
-  get roleName(){
+  roleType = 1 //自动推断为observable
+  get roleName(){ //自动推断为computed 
     return roleMap[roleType]
   }
-  changeRoleType(val){
+  changeRoleType(val){//自动推断为action
     this.roleType = val
   }
 }
@@ -446,7 +447,7 @@ configure({ useProxies: "never" })
 
   6. **MobX相比Redux最大的优势是什么？**  
   具体来说：MobX的开箱即用，简洁灵活，对现有项目侵入小，这都是相比Redux的优势方面。
-  抽象来讲：MobX相比Redux，它天然对实体模型是友好的，它在内部巧妙的借助拦截代理把数据做了observable转换，让你依然在使用层面感知到的是实体模型，但是它却拥有了响应式能力，这就是mobx最厉害的地方，它适合抽象[**领域模型**](https://zh.mobx.js.org/defining-data-stores.html#%E9%A2%86%E5%9F%9F%E5%AF%B9%E8%B1%A1)！
+  抽象来讲：MobX相比Redux，它天然对实体模型是友好的，它在内部巧妙的借助拦截代理把数据做了observable转换，让开发者在使用层面依旧感知到的是实体模型，但是它却拥有了响应式能力，这就是mobx最厉害的地方，它适合抽象[**领域模型**](https://zh.mobx.js.org/defining-data-stores.html#%E9%A2%86%E5%9F%9F%E5%AF%B9%E8%B1%A1)！
 ## 结尾
 以上所有例子都可在这个[github仓库](https://github.com/FEyudong/mobx-study.git)找到。 
 # END THANKS～
