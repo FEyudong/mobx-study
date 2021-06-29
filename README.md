@@ -189,9 +189,9 @@ export default rootStore
 src/demos/UserInfo.jsx
 ```
 import { observer } from "mobx-react";
-// 导入Store
+// 导入rootStore
 import rootStore from './../store';
-// 拿到对应的Store
+// 拿到对应的子Store
 const { userStore } = rootStore;
 
 class UserInfo extends Component {
@@ -222,7 +222,7 @@ const { userStore } = rootStore;
 
 class RoleManage extends Component {
   handleUpdateRoleType = ()=>{
-    //(2) 使用一个action去触发数据set，在set中发布依赖（触发组件更新,ps:清空Mobx购物车）
+    //(2) 使用一个action去触发数据set，在set中发布依赖（触发组件更新,ps:Mobx要清空购物车啦）
     userStore.changeRoleType(2)
   }
   render() {
@@ -238,7 +238,7 @@ import rootStore from './../store'
 
 const { userStore } = rootStore;
 ```
-这种方式繁琐且不利于维护，假如store文件重新组织，引入的地方需要处处更改与check。所以，有没有方式，在项目开发中Store只需**一次注入**，就可以在所有组件内很便捷的引用呢？  
+这种方式繁琐且不利于维护，假如store文件重新组织，引入的地方需要处处更改与check。所以，有没有方式，在项目开发中Store只需**一次注入**，就可以在所有组件内非常便捷的引用呢？  
 答案就是使用 Provider、inject。  
 让我们重构上边的例子:
 src/index.jsx
@@ -247,7 +247,7 @@ import App from "./App";
 
 import { Provider } from 'mobx-react'
 import store from './store'
-//将Store注入全局
+//利用Provider将Store注入全局
 ReactDOM.render(
     <Provider {...store}>
         <App/>
@@ -280,7 +280,7 @@ class UserInfo extends Component {
 export default inject('userStore')(observer(UserInfo))
 ```
 **Provider及inject**看上去与react官方推出的**context Api**用法非常相似，要解决的问题也基本一致。  
-事实上，最新版的mobx-react，前者就是基于后者去做的封装，这也从侧面说明，这俩Api现在来看，并**不是开发react应用的必需品**。所以MobX官方在推出针对React平台的轻量包（mobx-react-lite）时，首先就把这俩api排除在外了。  
+事实上，最新版的mobx-react，前者就是基于后者去做的封装，这也从侧面说明，这俩Api现在来看，并**不是开发react应用的必需品**。所以MobX官方在推出针对React平台的轻量包（mobx-react-lite）时，首先就把这俩api排除在外了。    
 但笔者认为，你如果使用的是**class组件，Provider及inject依然建议使用**，因为class组件内使用contextApi并不十分方便，但如果你用的**hooks，则大可不必再使用Provider及inject了**，得益于useContext的方便简洁，大大降低了使用他们的必要性（具体用法，后边会讲到）。
 ### 2.3 MobX + Hooks
 函数组件+hooks是目前开发React应用的首选方式。MobX顺应趋势，推出了新的hook Api，这已经成为使用MobX的主流方式。  
@@ -408,7 +408,7 @@ export default UserInfo
 ##### 3. 开发者工具
 [chrome插件](https://chrome.google.com/webstore/detail/mobx-developer-tools/pfgnfdagidkfgccljigdamigbcnndkod)
 ## 三、Q&A
-1. **IE项目能不能用？**
+1. **IE项目能不能用？**  
 V4版本默认可用，V5及以上如果需要兼容不支持Proxy的IE / React Native，请在应用初始化修改全局配置useProxies  
 ```
 import { configure } from "mobx"
@@ -447,6 +447,8 @@ configure({ useProxies: "never" })
   6. **MobX相比Redux最大的优势是什么？**  
   具体来说：MobX的开箱即用，简洁灵活，对现有项目侵入小，这都是相比Redux的优势方面。
   抽象来讲：MobX相比Redux，它天然对实体模型是友好的，巧妙的借助拦截代理在内部把数据做了observable转换，让你在使用层面感知到的还是实体模型，但是它却拥有了响应式能力，这就是mobx最厉害的地方，它适合抽象**领域模型**！
+## 结尾
+以上所有例子都可在这个[github仓库](https://github.com/FEyudong/mobx-study.git)找到。 
 #END THANKS～
 
 
